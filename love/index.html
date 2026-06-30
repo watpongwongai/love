@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Love You ❤️</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI',sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#ff9a9e,#fad0c4,#fad0c4);
+    transition:1s;
+}
+
+/* กล่องหลัก */
+.container{
+    text-align:center;
+    background:rgba(255,255,255,.25);
+    backdrop-filter:blur(12px);
+    padding:50px;
+    border-radius:25px;
+    box-shadow:0 10px 30px rgba(0,0,0,.2);
+    position:relative;
+    z-index:2;
+}
+
+h1{
+    color:#fff;
+    font-size:55px;
+    margin-bottom:10px;
+    animation:heartbeat 1s infinite;
+}
+
+p{
+    color:white;
+    font-size:22px;
+    margin-bottom:30px;
+}
+
+button{
+    padding:15px 35px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    font-size:18px;
+    transition:.3s;
+}
+
+#yes{
+    background:#ff4d6d;
+    color:white;
+    margin-right:20px;
+}
+
+#yes:hover{
+    transform:scale(1.1);
+}
+
+#no{
+    background:white;
+    color:#ff4d6d;
+    position:absolute;
+}
+
+/* หัวใจ */
+.heart{
+    position:absolute;
+    color:red;
+    animation:float 6s linear infinite;
+    opacity:.7;
+}
+
+@keyframes float{
+    from{transform:translateY(100vh) scale(.5);}
+    to{transform:translateY(-100px) scale(1.5);}
+}
+
+/* heartbeat */
+@keyframes heartbeat{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+    100%{transform:scale(1);}
+}
+.float-text {
+    position: absolute;
+    color: white;
+    font-size: 18px;
+    opacity: 0.8;
+    animation: rise 2s ease-out forwards;
+    pointer-events: none;
+}
+
+@keyframes rise {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-80px);
+        opacity: 0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<h1>❤️ คิดถึงเค้ามั้ยเอ่ย? ❤️</h1>
+
+<p id="text">
+    ทำเป็นเข้ม 😏 แต่ใจนี่ฟ้องชัดมากแล้วนะ
+</p>
+
+<button id="yes">คิดถึงมากๆๆๆๆๆๆๆๆ 💕 (ยอมรับมาเร็ว)</button>
+<button id="no">ไม่คิดถึง </button>
+<!-- 👉 ใส่ตรงนี้ -->
+<button id="goGallery" style="display:none;">
+📸 ความทรงจำของเรา
+</button>
+</div>
+
+<audio id="loveMusic" loop>
+    <source src="music/love.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+function spawnFloat(text) {
+    const span = document.createElement("div");
+    span.className = "float-text";
+    span.innerText = text;
+
+    span.style.left = Math.random() * 80 + 10 + "vw";
+    span.style.top = Math.random() * 70 + 20 + "vh";
+
+    document.body.appendChild(span);
+
+    setTimeout(() => {
+        span.remove();
+    }, 2000);
+}
+
+function typeWriter(element, text, speed = 80, callback) {
+    let i = 0;
+    element.innerHTML = "";
+
+    function typing() {
+        if (i < text.length) {
+
+            if (text.substring(i, i + 4) === "<br>") {
+                element.innerHTML += "<br>";
+                i += 4;
+            } else {
+                element.innerHTML += text.charAt(i);
+
+                if (text.charAt(i) !== " ") {
+                    spawnFloat(text.charAt(i));
+                }
+
+                i++;
+            }
+
+            setTimeout(typing, speed);
+        }
+        else {
+            // 👇 พิมพ์จบแล้วค่อยทำตรงนี้
+            if (callback) callback();
+        }
+    }
+
+    typing();
+}
+/* ================= HEART ================= */
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤️";
+
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.fontSize = (20 + Math.random()*25) + "px";
+    heart.style.animationDuration = (4 + Math.random()*5) + "s";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(), 8000);
+}
+
+setInterval(createHeart, 300);
+
+/* ================= BUTTON ESCAPE ================= */
+const noBtn = document.getElementById("no");
+
+noBtn.addEventListener("mouseover", ()=>{
+
+    noBtn.style.left = Math.random()*(window.innerWidth-120) + "px";
+    noBtn.style.top = Math.random()*(window.innerHeight-60) + "px";
+
+});
+
+/* ================= MUSIC (NO MODIFICATION) ================= */
+const music = document.getElementById("loveMusic");
+
+document.getElementById("yes").onclick = async function(){
+
+    const music = document.getElementById("loveMusic");
+
+music.volume = 0; // ตั้งก่อนเล่น
+
+try {
+    await music.play();
+} catch (e) {
+    console.log("autoplay blocked");
+}
+
+let v = 0;
+const fade = setInterval(() => {
+    v += 0.02;
+    music.volume = v;
+
+    if (v >= 0.4) {
+        clearInterval(fade);
+    }
+}, 80);
+    /* UI CHANGE */
+const message = `
+เย้!! ❤️<br><br>
+
+ขอบคุณที่เข้ามาในชีวิตเค้านะ 🥰  
+ตั้งแต่วันที่ได้รู้จักกัน ทุกอย่างไม่ได้เปลี่ยนแบบหวือหวา  
+แต่มันค่อย ๆ เปลี่ยนไปแบบเงียบ ๆ จนเค้ารู้ตัวอีกที…  
+ชีวิตมันมีความหมายขึ้นกว่าที่เคยเป็น<br><br>
+
+ตอนแรกเค้าอาจไม่ได้แสดงออกให้เห็นชัด  
+จนทำให้ตัวรู้สึกว่าเค้าไม่ใส่ใจพอ  
+แต่จริง ๆ แล้ว เค้าแค่ยังไม่เก่งพอที่จะบอกความรู้สึกทั้งหมดออกไป  
+โชคดีมากที่ตัวไม่ได้หายไปไหน และยังเลือกอยู่ตรงนี้กับเค้า<br><br>
+
+ไม่ใช่เพราะความยิ่งใหญ่ หรือความพิเศษแบบใคร ๆ  
+แต่เป็นเพราะ “การมีตัวอยู่ตรงนี้”  
+มันทำให้วันที่ธรรมดาที่สุด กลายเป็นวันที่เค้าจำได้เสมอ 💖<br><br>
+
+บางวันแค่เห็นข้อความจากตัว  
+หรือได้คุยกันไม่กี่ประโยค  
+มันก็ทำให้ความเหนื่อยทั้งวันเบาลงไปเฉย ๆ  
+เหมือนโลกที่เคยหนัก…มันเบาลงโดยไม่ต้องพยายาม 🌙<br><br>
+
+เค้าไม่รู้อนาคตจะพาเราไปทางไหน  
+และไม่กล้าสัญญาอะไรที่ใหญ่เกินไป  
+แต่เค้ารู้แน่ ๆ อย่างหนึ่งคือ  
+“ทุกวินาทีที่มีตัวอยู่ตรงนี้ มันมีค่ากับเค้ามากจริง ๆ” 😊<br><br>
+
+ตัวไม่ใช่แค่ความรู้สึกดี ๆ  
+แต่เป็นช่วงเวลาหนึ่งในชีวิต ที่เค้าอยากรักษาไว้ให้นานที่สุด ❤️<br><br>
+
+ขอบคุณนะ ที่ยังอยู่ข้าง ๆ กันเสมอ  
+และขอบคุณที่ทำให้เค้าได้รู้ว่าความรู้สึกแบบนี้มันมีอยู่จริง 🤍
+`;
+
+const textEl = document.getElementById("text");
+typeWriter(textEl, message, 120, () => {
+
+    // 💖 แสดงปุ่มหลังพิมพ์จบ
+    document.getElementById("goGallery").style.display = "inline-block";
+
+});
+
+    document.body.style.background =
+    "linear-gradient(135deg,#ff758c,#ff7eb3,#ffb199)";
+
+    document.getElementById("yes").style.display = "none";
+    document.getElementById("no").style.display = "none";
+
+    for(let i=0;i<60;i++){
+        setTimeout(createHeart, i*50);
+    }
+};
+document.getElementById("goGallery").onclick = function(){
+
+    const music = document.getElementById("loveMusic");
+
+localStorage.setItem("musicPlaying", "1");
+localStorage.setItem("musicTime", music.currentTime);
+
+    window.location.href = "gallery.html";
+};
+</script>
+
+</body>
+</html>
